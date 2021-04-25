@@ -1,16 +1,21 @@
 import { Configuration, App } from '@midwayjs/decorator';
-import { Application } from '@midwayjs/koa';
-import * as bodyParser from 'koa-bodyparser';
+import { ILifeCycle } from '@midwayjs/core';
+import { IMidwayKoaApplication } from '@midwayjs/koa';
 
-@Configuration({
-  conflictCheck: true,
-})
-export class ContainerLifeCycle {
+import { getMockUser } from './utils/mock';
+import { defaultPagination } from './utils/constants';
+
+@Configuration()
+export class ContainerConfiguration implements ILifeCycle {
   @App()
-  app: Application;
+  app: IMidwayKoaApplication;
 
   async onReady() {
-    // bodyparser options see https://github.com/koajs/bodyparser
-    this.app.use(bodyParser());
+    this.app.use(await this.app.generateMiddleware('GraphQLMiddleware'));
+
+    this.app.getApplicationContext().registerObject('mockUser', getMockUser());
+    this.app
+      .getApplicationContext()
+      .registerObject('pagination', defaultPagination);
   }
 }
