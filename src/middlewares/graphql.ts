@@ -5,6 +5,7 @@ import { Middleware } from 'koa';
 import { ApolloServer } from 'apollo-server-koa';
 import { buildSchemaSync } from 'type-graphql';
 
+import { mockService } from '../utils/mock';
 @Provide('GraphQLMiddleware')
 export class GraphqlMiddleware implements IWebMiddleware {
   @App()
@@ -18,7 +19,9 @@ export class GraphqlMiddleware implements IWebMiddleware {
         authMode: 'error',
         emitSchemaFile: true,
       }),
-      context: {},
+      context: {
+        service: mockService,
+      },
     });
     console.log('Apollo-GraphQL Invoke');
 

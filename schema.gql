@@ -3,32 +3,21 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Mutation {
-  CreateUser(createParams: UserCreateInput!): User
-  DeleteUser(id: Int!): User
-  UpdateUser(updateParams: UserUpdateInput!): User
+type Pet {
+  id: ID!
+  kind: String!
 }
 
 type Query {
-  GetAllUsers(pagination: UserPaginationInput): [User!]!
-  GetUserById(id: Int!): User
+  GetAllUsers: [User!]
+  GetUserByName(name: String!): User
 }
 
 type User {
   id: ID!
   name: String!
-}
-
-input UserCreateInput {
-  name: String!
-}
-
-input UserPaginationInput {
-  offset: Int!
-  take: Int!
-}
-
-input UserUpdateInput {
-  id: Int!
-  name: String!
+  partner: User!
+  partnerId: ID!
+  petIds: [ID!]!
+  pets: [Pet!]!
 }

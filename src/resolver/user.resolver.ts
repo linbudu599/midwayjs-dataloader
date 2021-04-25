@@ -1,67 +1,36 @@
-import { Provide, Inject } from '@midwayjs/decorator';
-import { Resolver, Query, Arg, Int, Mutation } from 'type-graphql';
+import { Provide } from '@midwayjs/decorator';
+import { Resolver, Query, Arg, Ctx, FieldResolver, Root } from 'type-graphql';
 
-import User, {
-  UserCreateInput,
-  UserUpdateInput,
-  UserPaginationInput,
-} from '../graphql/user';
-import { IDefaultPagination } from '../utils/constants';
+import { User, Pet } from '../graphql/user';
+
+import { mockService } from '../utils/mock';
+
+type Context = {
+  service: typeof mockService;
+};
 
 @Provide()
 @Resolver(of => User)
 export default class UserResolver {
-  @Inject()
-  mockUser: User[];
-
-  @Inject()
-  pagination: IDefaultPagination;
-
-  @Query(returns => [User])
-  GetAllUsers(
-    @Arg('pagination', type => UserPaginationInput, { nullable: true })
-    pagination: UserPaginationInput
-  ): User[] {
-    const { offset, take } = pagination ?? this.pagination;
-    return this.mockUser.slice(offset, offset + take);
+  @Query(returns => [User], { nullable: true })
+  GetAllUsers(@Ctx() context: Context) {
+    return context.service.getAllUsers();
   }
 
   @Query(returns => User, { nullable: true })
-  GetUserById(@Arg('id', type => Int) id: number): User {
-    return this.mockUser.find(value => value.id === id);
+  GetUserByName(@Arg('name') name: string, @Ctx() context: Context) {
+    return context.service.getUserByName(name);
   }
 
-  @Mutation(returns => User, { nullable: true })
-  CreateUser(
-    @Arg('createParams', type => UserCreateInput) createParams: UserCreateInput
-  ) {
-    const len = this.mockUser.length;
-    const id = this.mockUser[len - 1].id + 1;
-    const createdUser = {
-      id,
-      name: createParams.name,
-    };
-    this.mockUser.push(createdUser);
-
-    return createdUser;
+  @FieldResolver(returns => User, { nullable: true })
+  partner(@Root() root: User, @Ctx() context: Context) {
+    const partnerId = root.partnerId;
+    return context.service.getUserById(partnerId);
   }
 
-  @Mutation(returns => User, { nullable: true })
-  UpdateUser(
-    @Arg('updateParams', type => UserUpdateInput) updateParams: UserUpdateInput
-  ): User {
-    const updateItem = this.mockUser.find(val => val.id === updateParams.id);
-    updateItem.name = updateParams.name;
-
-    return updateItem;
-  }
-
-  @Mutation(returns => User, { nullable: true })
-  DeleteUser(@Arg('id', type => Int) id: number): User {
-    const deleteItem = this.mockUser.find(val => val.id === id);
-    const deleteIdx = this.mockUser.indexOf(deleteItem);
-
-    this.mockUser.splice(deleteIdx, 1);
-    return deleteItem;
+  @FieldResolver(returns => [Pet], { nullable: true })
+  pets(@Root() root: User, @Ctx() context: Context) {
+    const petIds = root.petIds;
+    return context.service.getPetsByIds(petIds);
   }
 }
