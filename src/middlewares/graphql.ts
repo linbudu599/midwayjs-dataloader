@@ -6,6 +6,11 @@ import { ApolloServer } from 'apollo-server-koa';
 import { buildSchemaSync } from 'type-graphql';
 
 import { mockService } from '../utils/mock';
+
+import { DataLoaderMiddleware } from '../lib/sample';
+
+import { ApolloContext } from '../types';
+
 @Provide('GraphQLMiddleware')
 export class GraphqlMiddleware implements IWebMiddleware {
   @App()
@@ -18,10 +23,15 @@ export class GraphqlMiddleware implements IWebMiddleware {
         container: this.app.getApplicationContext(),
         authMode: 'error',
         emitSchemaFile: true,
+        globalMiddlewares: [DataLoaderMiddleware],
       }),
       context: {
         service: mockService,
-      },
+        dataLoader: {
+          initialized: false,
+          loaders: {},
+        },
+      } as ApolloContext,
     });
     console.log('Apollo-GraphQL Invoke');
 

@@ -10,6 +10,7 @@
     "@midwayjs/koa": "^2.3.0",
     "apollo-server-koa": "^2.23.0",
     "class-validator": "^0.13.1",
+    "dataloader": "^2.0.0",
     "graphql": "^15.5.0",
     "koa-bodyparser": "^4.3.0",
     "type-graphql": "^1.1.1"
