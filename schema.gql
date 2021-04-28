@@ -3,14 +3,40 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type ORMUser {
+  id: ID!
+  name: String!
+  posts: [Post!]
+  profile: Profile
+}
+
 type Pet {
   id: ID!
   kind: String!
 }
 
+type Post {
+  author: ORMUser
+  content: String
+  postId: ID!
+  title: String!
+}
+
+type Profile {
+  description: String!
+  profileId: ID!
+  user: ORMUser
+}
+
 type Query {
   GetAllUsers: [User!]
   GetUserByName(name: String!): User
+  ORMGetAllPosts: [Post!]
+  ORMGetAllProfiles: [Profile!]
+  ORMGetAllUsers: [ORMUser!]
+  ORMGetPostById(postId: Float!): Post
+  ORMGetProfileById(profileId: Float!): Profile
+  ORMGetUserById(id: Float!): ORMUser
 }
 
 type User {
