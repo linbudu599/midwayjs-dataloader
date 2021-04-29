@@ -4,16 +4,8 @@ import { Provide, Inject, Scope, ScopeEnum } from '@midwayjs/decorator';
 import DataLoader from 'dataloader';
 import { MiddlewareInterface, NextFn, ResolverData } from 'type-graphql';
 import { TypeORMService } from '../service/typeorm.service';
+import { Mutable, SampleContext } from '../types';
 import { mockService } from '../utils/mock';
-
-export interface SampleContext {
-  dataLoader: {
-    initialized: boolean;
-    loaders: Record<string, DataLoader<any, any, any>>;
-  };
-}
-
-export type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
 // 应当控制作用域
 @Provide()

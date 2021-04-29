@@ -49,14 +49,20 @@ export default class TypeORMResolver {
   }
 
   @FieldResolver(returns => [PostEntity], { nullable: true })
-  postsField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
+  async postsField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
     const postsIds = root.postsIds;
+    console.log('metadata loader');
+    console.log(await context.metadataLoader.loaders.ORMUser.posts.load(root));
     return context.dataLoader.loaders.postORMLoader.loadMany(postsIds);
   }
 
   @FieldResolver(returns => ProfileEntity, { nullable: true })
-  profileField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
+  async profileField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
     const profileId = root.profileId;
+    console.log('metadata loader');
+    console.log(
+      await context.metadataLoader.loaders.ORMUser.profile.load(root)
+    );
     return context.dataLoader.loaders.profileORMLoader.load(profileId);
   }
 }

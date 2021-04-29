@@ -4,10 +4,12 @@ import { IWebMiddleware, IMidwayKoaApplication } from '@midwayjs/koa';
 import { Middleware } from 'koa';
 import { ApolloServer } from 'apollo-server-koa';
 import { buildSchemaSync } from 'type-graphql';
+import { getConnection } from 'typeorm';
 
 import { mockService } from '../utils/mock';
 
 import { DataLoaderMiddleware } from '../lib/batchload-manually';
+import { DataLoaderMetadataMiddleware } from '../lib/auto-register-metadata';
 
 import { ApolloContext } from '../types';
 
@@ -23,7 +25,7 @@ export class GraphqlMiddleware implements IWebMiddleware {
         container: this.app.getApplicationContext(),
         authMode: 'error',
         emitSchemaFile: true,
-        globalMiddlewares: [DataLoaderMiddleware],
+        globalMiddlewares: [DataLoaderMiddleware, DataLoaderMetadataMiddleware],
       }),
       context: {
         service: mockService,
@@ -31,6 +33,10 @@ export class GraphqlMiddleware implements IWebMiddleware {
           initialized: false,
           loaders: {},
         },
+        metadataLoader: {
+          loaders: {},
+        },
+        connection: getConnection(),
       } as ApolloContext,
     });
     console.log('Apollo-GraphQL Invoke');
