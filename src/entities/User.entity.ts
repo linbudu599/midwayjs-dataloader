@@ -1,5 +1,5 @@
 import { EntityModel } from '@midwayjs/orm';
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, ID, Int } from 'type-graphql';
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -7,6 +7,7 @@ import {
   OneToMany,
   JoinColumn,
   BaseEntity,
+  RelationId,
 } from 'typeorm';
 
 import Profile from './Profile.entity';
@@ -30,12 +31,19 @@ export default class ORMUser extends BaseEntity {
   })
   @JoinColumn()
   @Field(type => Profile, { nullable: true })
-  profile: Profile;
+  profile?: Profile;
+
+  @RelationId((user: ORMUser) => user.profile)
+  profileId?: number[];
 
   @OneToMany(type => Post, post => post.author, {
     cascade: true,
     nullable: true,
   })
   @Field(type => [Post], { nullable: true })
-  posts: Post[];
+  posts?: Post[];
+
+  @RelationId((user: ORMUser) => user.posts)
+  @Field(() => Int)
+  postsIds?: number[];
 }

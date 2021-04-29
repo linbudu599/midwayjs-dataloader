@@ -1,4 +1,4 @@
-import { SampleContext } from './lib/sample';
+import { SampleContext } from './lib/batchload-manually';
 import { mockService } from './utils/mock';
 
 export type BaseContext = {

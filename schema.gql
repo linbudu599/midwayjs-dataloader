@@ -7,7 +7,10 @@ type ORMUser {
   id: ID!
   name: String!
   posts: [Post!]
+  postsField: [Post!]
+  postsIds: Int!
   profile: Profile
+  profileField: Profile
 }
 
 type Pet {
@@ -17,6 +20,7 @@ type Pet {
 
 type Post {
   author: ORMUser
+  authorId: Int!
   content: String
   postId: ID!
   title: String!
@@ -26,6 +30,7 @@ type Profile {
   description: String!
   profileId: ID!
   user: ORMUser
+  userId: Int!
 }
 
 type Query {

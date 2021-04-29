@@ -7,7 +7,7 @@ import { buildSchemaSync } from 'type-graphql';
 
 import { mockService } from '../utils/mock';
 
-import { DataLoaderMiddleware } from '../lib/sample';
+import { DataLoaderMiddleware } from '../lib/batchload-manually';
 
 import { ApolloContext } from '../types';
 

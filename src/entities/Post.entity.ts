@@ -1,7 +1,7 @@
 import { EntityModel } from '@midwayjs/orm';
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, ID, Int } from 'type-graphql';
 
-import { PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from 'typeorm';
 
 import User from './User.entity';
 
@@ -26,4 +26,8 @@ export default class Post {
   })
   @Field(type => User, { nullable: true })
   author: User;
+
+  @RelationId((post: Post) => post.author)
+  @Field(() => Int)
+  authorId?: number;
 }

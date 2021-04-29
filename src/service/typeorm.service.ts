@@ -24,12 +24,14 @@ export class TypeORMService {
   }
 
   async getUserById(id: number): Promise<User> {
+    console.log('getUserById Invoked With: ', id);
     return await this.userModel.findOne(id, {
       relations: ['posts', 'profile'],
     });
   }
 
   async getUsersByIds(ids: number[]): Promise<User[]> {
+    console.log('getUsersByIds Invoked With: ', ids);
     return await this.userModel.findByIds(ids, {
       relations: ['posts', 'profile'],
     });
@@ -42,14 +44,16 @@ export class TypeORMService {
   }
 
   async getPostById(id: number): Promise<Post> {
+    console.log('getPostById Invoked With: ', id);
     return await this.postModel.findOne(id, {
-      relations: ['user'],
+      relations: ['author'],
     });
   }
 
   async getPostsByIds(ids: number[]): Promise<Post[]> {
+    console.log('getPostsByIds Invoked With: ', ids);
     return await this.postModel.findByIds(ids, {
-      relations: ['user'],
+      relations: ['author'],
     });
   }
 
@@ -60,6 +64,7 @@ export class TypeORMService {
   }
 
   async getProfileById(id: number): Promise<Profile> {
+    console.log('getProfileById Invoked With: ', id);
     return await this.profileModel.findOne(id, {
       relations: ['user'],
     });

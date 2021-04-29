@@ -10,7 +10,7 @@ import { ApolloContext } from '../types';
 import { TypeORMService } from '../service/typeorm.service';
 
 @Provide()
-@Resolver()
+@Resolver(() => UserEntity)
 export default class TypeORMResolver {
   @Inject()
   service: TypeORMService;
@@ -48,8 +48,15 @@ export default class TypeORMResolver {
     return this.service.getProfileById(id);
   }
 
-  // @FieldResolver(() => User, { nullable: true })
-  // posts(@Root() root: User, @Ctx() context: ApolloContext) {
-  //   const postIds = root.posts;
-  // }
+  @FieldResolver(returns => [PostEntity], { nullable: true })
+  postsField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
+    const postsIds = root.postsIds;
+    return context.dataLoader.loaders.postORMLoader.loadMany(postsIds);
+  }
+
+  @FieldResolver(returns => ProfileEntity, { nullable: true })
+  profileField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
+    const profileId = root.profileId;
+    return context.dataLoader.loaders.profileORMLoader.load(profileId);
+  }
 }

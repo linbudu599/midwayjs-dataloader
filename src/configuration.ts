@@ -30,11 +30,16 @@ export class ContainerConfiguration implements ILifeCycle {
     const mockPost1 = new Post();
     mockPost1.title = 'The Power of MidwayJS';
 
+    const mockPost2 = new Post();
+    mockPost2.title = 'The Power of @nrwl/nx';
+
     mockUser1.name = '张三';
     mockUser1.profile = mockProfile1;
-    mockUser1.posts = [mockPost1];
+    mockUser1.posts = [mockPost1, mockPost2];
 
     await mockUser1.save();
+
+    console.log(await connection.getRepository(User).find());
 
     console.log('[ TypeORM ] Mock Data Inserted');
   }
