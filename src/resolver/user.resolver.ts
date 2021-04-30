@@ -42,6 +42,8 @@ export default class UserResolver {
     return this.loader.userLoader.load(partnerId);
   }
 
+  // Field Resolver on User.pets (1-n relation)
+
   @FieldResolver(() => [Pet], { nullable: true })
   petsOrigin(@Root() root: User, @Ctx() context: ApolloContext) {
     const petIds = root.petIds;

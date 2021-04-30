@@ -5,11 +5,11 @@ import UserEntity from '../entities/User.entity';
 import PostEntity from '../entities/Post.entity';
 import ProfileEntity from '../entities/Profile.entity';
 
-import { ApolloContext } from '../types';
+import { ApolloContext, RegisteredPlainDataLoader } from '../types';
 
 import { TypeORMService } from '../service/typeorm.service';
 
-import { PostLoader } from '../decorators/Loader';
+import { PostLoader, ProfileLoader } from '../decorators/Loader';
 import DataLoader from 'dataloader';
 
 @Provide()
@@ -18,61 +18,115 @@ export default class TypeORMResolver {
   @Inject()
   service: TypeORMService;
 
-  @Query(type => [UserEntity], { nullable: true })
-  ORMGetAllUsers(@Ctx() context: ApolloContext) {
+  @Inject('LOADER')
+  loader: RegisteredPlainDataLoader;
+
+  @Query(() => [UserEntity], { nullable: true })
+  ORMGetAllUsers() {
     return this.service.getAllUsers();
   }
 
-  @Query(type => UserEntity, { nullable: true })
-  ORMGetUserById(@Arg('id') id: number, @Ctx() context: ApolloContext) {
+  @Query(() => UserEntity, { nullable: true })
+  ORMGetUserById(@Arg('id') id: number) {
     return this.service.getUserById(id);
   }
 
-  @Query(type => [PostEntity], { nullable: true })
-  ORMGetAllPosts(@Ctx() context: ApolloContext) {
+  @Query(() => [PostEntity], { nullable: true })
+  ORMGetAllPosts() {
     return this.service.getAllPosts();
   }
 
-  @Query(type => PostEntity, { nullable: true })
-  ORMGetPostById(@Arg('postId') id: number, @Ctx() context: ApolloContext) {
+  @Query(() => PostEntity, { nullable: true })
+  ORMGetPostById(@Arg('postId') id: number) {
     return this.service.getPostById(id);
   }
 
-  @Query(type => [ProfileEntity], { nullable: true })
-  ORMGetAllProfiles(@Ctx() context: ApolloContext) {
+  @Query(() => [ProfileEntity], { nullable: true })
+  ORMGetAllProfiles() {
     return this.service.getAllProfiles();
   }
 
-  @Query(type => ProfileEntity, { nullable: true })
-  ORMGetProfileById(
-    @Arg('profileId') id: number,
-    @Ctx() context: ApolloContext
-  ) {
+  @Query(() => ProfileEntity, { nullable: true })
+  ORMGetProfileById(@Arg('profileId') id: number) {
     return this.service.getProfileById(id);
   }
 
-  @FieldResolver(returns => [PostEntity], { nullable: true })
-  async postsField(
+  // Field Resolver on User.posts (1-n relation)
+
+  @FieldResolver(() => [PostEntity], { nullable: true })
+  async postsOrigin(@Root() root: UserEntity) {
+    const postsIds = root.postsIds;
+    return await this.service.getPostsByIds(postsIds);
+  }
+
+  @FieldResolver(() => [PostEntity], { nullable: true })
+  async postsFromContextLoader(
     @Root() root: UserEntity,
-    @PostLoader() loader: DataLoader<number, PostEntity>,
     @Ctx() context: ApolloContext
   ) {
     const postsIds = root.postsIds;
-    console.log('loader: ', loader);
-    console.log('metadata loader');
-
-    return loader.loadMany(postsIds);
-    // console.log(await context.metadataLoader.loaders.ORMUser.posts.load(root));
-    // return context.dataLoader.loaders.postORMLoader.loadMany(postsIds);
+    return context.dataLoader.loaders.postORMLoader.loadMany(postsIds);
   }
 
-  @FieldResolver(returns => ProfileEntity, { nullable: true })
-  async profileField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
+  @FieldResolver(() => [PostEntity], { nullable: true })
+  async postsFromDecoratorLoader(
+    @Root() root: UserEntity,
+    @PostLoader() loader: DataLoader<number, PostEntity>
+  ) {
+    const postsIds = root.postsIds;
+    return loader.loadMany(postsIds);
+  }
+
+  @FieldResolver(() => [PostEntity], { nullable: true })
+  async postsFromMetadataLoader(
+    @Root() root: UserEntity,
+    @Ctx() context: ApolloContext
+  ) {
+    return await context.metadataLoader.loaders.ORMUser.posts.load(root);
+  }
+
+  // Field Resolver on User.profile (1-1 relation)
+
+  @FieldResolver(() => ProfileEntity, { nullable: true })
+  async profileOrigin(@Root() root: UserEntity) {
     const profileId = root.profileId;
-    console.log('metadata loader');
-    console.log(
-      await context.metadataLoader.loaders.ORMUser.profile.load(root)
-    );
+    return await this.service.getProfileById(profileId);
+  }
+
+  @FieldResolver(() => ProfileEntity, { nullable: true })
+  async profileFromContextLoader(
+    @Root() root: UserEntity,
+    @Ctx() context: ApolloContext
+  ) {
+    const profileId = root.profileId;
     return context.dataLoader.loaders.profileORMLoader.load(profileId);
   }
+
+  @FieldResolver(() => ProfileEntity, { nullable: true })
+  async profileFromDecoratorLoader(
+    @Root() root: UserEntity,
+    @ProfileLoader() loader: DataLoader<number, ProfileEntity>
+  ) {
+    const profileId = root.profileId;
+
+    return loader.load(profileId);
+  }
+
+  @FieldResolver(() => ProfileEntity, { nullable: true })
+  async profileFromMetadataLoader(
+    @Root() root: UserEntity,
+    @Ctx() context: ApolloContext
+  ) {
+    return await context.metadataLoader.loaders.ORMUser.profile.load(root);
+  }
+
+  // @FieldResolver(() => ProfileEntity, { nullable: true })
+  // async profileField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
+  //   const profileId = root.profileId;
+  //   console.log('metadata loader');
+  //   console.log(
+  //     await context.metadataLoader.loaders.ORMUser.profile.load(root)
+  //   );
+  //   return context.dataLoader.loaders.profileORMLoader.load(profileId);
+  // }
 }

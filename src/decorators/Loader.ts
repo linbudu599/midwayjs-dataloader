@@ -13,3 +13,8 @@ export const PostLoader = () =>
   createParamDecorator<ApolloContext>(
     ({ context }) => context.dataLoader.loaders['postORMLoader']
   );
+
+export const ProfileLoader = () =>
+  createParamDecorator<ApolloContext>(
+    ({ context }) => context.dataLoader.loaders['profileORMLoader']
+  );

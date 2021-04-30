@@ -34,7 +34,7 @@ export default class ORMUser extends BaseEntity {
   profile?: Profile;
 
   @RelationId((user: ORMUser) => user.profile)
-  profileId?: number[];
+  profileId?: number;
 
   @OneToMany(type => Post, post => post.author, {
     cascade: true,

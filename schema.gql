@@ -7,10 +7,16 @@ type ORMUser {
   id: ID!
   name: String!
   posts: [Post!]
-  postsField: [Post!]
+  postsFromContextLoader: [Post!]
+  postsFromDecoratorLoader: [Post!]
+  postsFromMetadataLoader: [Post!]
   postsIds: Int!
+  postsOrigin: [Post!]
   profile: Profile
-  profileField: Profile
+  profileFromContextLoader: Profile
+  profileFromDecoratorLoader: Profile
+  profileFromMetadataLoader: Profile
+  profileOrigin: Profile
 }
 
 type Pet {
