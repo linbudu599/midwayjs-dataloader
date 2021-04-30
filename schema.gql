@@ -48,7 +48,13 @@ type User {
   id: ID!
   name: String!
   partner: User!
+  partnerFromCtxLoader: User
+  partnerFromRegisteredLoader: User
   partnerId: ID!
+  partnerOrigin: User
   petIds: [ID!]!
   pets: [Pet!]!
+  petsFromCtxLoader: [Pet!]
+  petsFromRegisteredLoader: [Pet!]
+  petsOrigin: [Pet!]
 }

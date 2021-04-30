@@ -3,6 +3,9 @@ import { ILifeCycle, IMidwayContainer } from '@midwayjs/core';
 import { getConnection } from 'typeorm';
 import { IMidwayKoaApplication } from '@midwayjs/koa';
 import { mockService } from './utils/mock';
+import { TypeORMService } from './service/typeorm.service';
+import DataLoader from 'dataloader';
+import { RegisteredPlainDataLoader } from './types';
 
 import User from './entities/User.entity';
 import Post from './entities/Post.entity';
@@ -42,5 +45,14 @@ export class ContainerConfiguration implements ILifeCycle {
     console.log(await connection.getRepository(User).find());
 
     console.log('[ TypeORM ] Mock Data Inserted');
+
+    this.app.getApplicationContext().registerObject('LOADER', {
+      userLoader: new DataLoader((ids: number[]) =>
+        mockService.getUsersByIds(ids)
+      ),
+      petLoader: new DataLoader((ids: number[]) =>
+        mockService.getPetsByIds(ids)
+      ),
+    } as RegisteredPlainDataLoader);
   }
 }

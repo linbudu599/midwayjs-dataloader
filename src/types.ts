@@ -20,3 +20,5 @@ export interface SampleContext {
 }
 
 export type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+
+export type RegisteredPlainDataLoader = Record<string, DataLoader<number, any>>;

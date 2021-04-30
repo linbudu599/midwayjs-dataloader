@@ -9,6 +9,9 @@ import { ApolloContext } from '../types';
 
 import { TypeORMService } from '../service/typeorm.service';
 
+import { PostLoader } from '../decorators/Loader';
+import DataLoader from 'dataloader';
+
 @Provide()
 @Resolver(() => UserEntity)
 export default class TypeORMResolver {
@@ -49,11 +52,18 @@ export default class TypeORMResolver {
   }
 
   @FieldResolver(returns => [PostEntity], { nullable: true })
-  async postsField(@Root() root: UserEntity, @Ctx() context: ApolloContext) {
+  async postsField(
+    @Root() root: UserEntity,
+    @PostLoader() loader: DataLoader<number, PostEntity>,
+    @Ctx() context: ApolloContext
+  ) {
     const postsIds = root.postsIds;
+    console.log('loader: ', loader);
     console.log('metadata loader');
-    console.log(await context.metadataLoader.loaders.ORMUser.posts.load(root));
-    return context.dataLoader.loaders.postORMLoader.loadMany(postsIds);
+
+    return loader.loadMany(postsIds);
+    // console.log(await context.metadataLoader.loaders.ORMUser.posts.load(root));
+    // return context.dataLoader.loaders.postORMLoader.loadMany(postsIds);
   }
 
   @FieldResolver(returns => ProfileEntity, { nullable: true })
