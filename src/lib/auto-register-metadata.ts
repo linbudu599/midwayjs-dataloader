@@ -21,7 +21,7 @@ export class DataLoaderMetadataMiddleware
   ) {
     const loaders = context.metadataLoader.loaders;
 
-    // TODO: 应当在应用启动时注册
+    // TODO: 应当在应用启动时注册?
     context.connection.entityMetadatas.forEach(entityMetadata => {
       // 所有实体的名称
       // ORMUser Profile Post

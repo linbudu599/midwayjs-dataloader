@@ -1,4 +1,5 @@
 import DataLoader from 'dataloader';
+import { IMidwayContainer } from '@midwayjs/core';
 import { Connection } from 'typeorm';
 import { mockService } from './utils/mock';
 
@@ -17,6 +18,7 @@ export interface SampleContext {
     loaders: Record<string, Record<string, DataLoader<any, any, any>>>;
   };
   connection: Connection;
+  container: IMidwayContainer;
 }
 
 export type Mutable<T> = { -readonly [K in keyof T]: T[K] };
