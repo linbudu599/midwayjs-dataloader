@@ -36,6 +36,7 @@ export class GraphqlMiddleware implements IWebMiddleware {
         metadataLoader: {
           loaders: {},
         },
+        container: this.app.getApplicationContext(),
         connection: getConnection(),
       } as ApolloContext,
     });

@@ -12,11 +12,11 @@ import { ApolloContext } from '../types';
 
 // @IntegrationLoader((type)=>User, (User)=>User.xxx)
 export type ReturnTypeFunc<T> = (type?: void) => ObjectType<T>;
-export type RelationKeyFunc<T> = (relationOwner: ObjectType<T>) => any;
+export type RelationKeyFunc<T> = (relationOwner: T) => any;
 
-export const IntegrationLoader = <T>(
+export const IntegrationLoader = <T, K>(
   returnTypeFunc: ReturnTypeFunc<T>,
-  relationKeyFunc: RelationKeyFunc<T>
+  relationKeyFunc: RelationKeyFunc<K>
 ): PropertyDecorator => {
   return (target: unknown, propertyKey: string) => {
     UseMiddleware(async ({ root, context }, next) => {
@@ -28,10 +28,21 @@ export const IntegrationLoader = <T>(
       if (relationMetadata === null) {
         return await next();
       }
-    });
+
+      const res = await toOneRelationHandler(
+        relationKeyFunc,
+        root,
+        connection,
+        relationMetadata,
+        (context as ApolloContext).container
+      );
+
+      return res;
+    })(target, propertyKey);
   };
 };
-const handler = <EntityType>(
+
+const handler = async <EntityType>(
   connection: Connection,
   relationMetadata: RelationMetadata,
   columns: ColumnMetadata[],
@@ -42,17 +53,21 @@ const handler = <EntityType>(
   ) => Promise<any>,
   container: IMidwayContainer
 ) => {
-  const identifier = `DataLoader_${relationMetadata.entityMetadata.tableName}_${relationMetadata.propertyName}`;
-  if (!container.get<{ loader: DataLoader<any, EntityType> }>(identifier)) {
-    container.registerObject(identifier, {
-      loader: dataLoaderInstance(connection),
-    });
-  }
+  // const identifier = `DataLoader_${relationMetadata.entityMetadata.tableName}_${relationMetadata.propertyName}`;
 
-  return callback(
-    container.get<{ loader: DataLoader<any, EntityType> }>(identifier).loader,
+  // if (!container.get<{ loader: DataLoader<any, EntityType> }>(identifier)) {
+  //   container.registerObject(identifier, {
+  //     loader: dataLoaderInstance(connection),
+  //   });
+  // }
+
+  const x = await callback(
+    // container.get<{ loader: DataLoader<any, EntityType> }>(identifier).loader,
+    dataLoaderInstance(connection),
     columns
   );
+
+  return x;
 };
 
 const toOneRelationHandler = async <T>(
@@ -60,9 +75,10 @@ const toOneRelationHandler = async <T>(
   root: any,
   connection: Connection,
   relation: RelationMetadata,
+
   container: IMidwayContainer
 ) => {
-  return handler(
+  const invokeRes = await handler(
     connection,
     relation,
     relation.inverseEntityMetadata.primaryColumns,
@@ -73,6 +89,8 @@ const toOneRelationHandler = async <T>(
     },
     container
   );
+
+  return invokeRes;
 };
 
 class ToOneDataloader<EntityType> extends DataLoader<any, EntityType> {

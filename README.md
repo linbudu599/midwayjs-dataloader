@@ -12,6 +12,6 @@ Guidance on DataLoader integration with MidwayJS.
 
 - [x] Register DataLoader instances with **Plain Functions** by TypeGraphQL middleware, manually.
 - [x] Register DataLoader instances with **Service(TypeORM findByIds)** by TypeGraphQL middleware, manually.
-- [ ] Register DataLoader instances with **TypeORM Relation Metadata** by TypeGraphQL middleware, automatically.
-- [ ] Register DataLoader instances with **Provided batchLoadFn** by MidwayJS interceptors, with custom decorator.
+- [x] Register DataLoader instances with **TypeORM Relation Metadata** by TypeGraphQL middleware, automatically.
+- [x] Register DataLoader instances with **Provided batchLoadFn** by MidwayJS interceptors, with custom decorator.
 - [ ] Register DataLoader instances with **TypeORM Relation Metadata** by TypeGraphQL middleware, automatically.

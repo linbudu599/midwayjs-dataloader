@@ -14,6 +14,8 @@ import Profile from './Profile.entity';
 
 import Post from './Post.entity';
 
+import { IntegrationLoader } from '../lib/typegraphql-dataloader';
+
 @ObjectType()
 @EntityModel()
 export default class ORMUser extends BaseEntity {
@@ -31,6 +33,10 @@ export default class ORMUser extends BaseEntity {
   })
   @JoinColumn()
   @Field(type => Profile, { nullable: true })
+  @IntegrationLoader<Profile, ORMUser>(
+    () => Profile,
+    (user: ORMUser) => user.profile
+  )
   profile?: Profile;
 
   @RelationId((user: ORMUser) => user.profile)

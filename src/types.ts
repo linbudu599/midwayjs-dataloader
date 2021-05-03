@@ -19,6 +19,7 @@ export interface SampleContext {
   };
   connection: Connection;
   container: IMidwayContainer;
+  getContainer: () => IMidwayContainer;
 }
 
 export type Mutable<T> = { -readonly [K in keyof T]: T[K] };
