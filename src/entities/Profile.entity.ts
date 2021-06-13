@@ -5,6 +5,8 @@ import { PrimaryGeneratedColumn, Column, OneToOne, RelationId } from 'typeorm';
 
 import User from './User.entity';
 
+import { TypeormLoader } from 'type-graphql-dataloader';
+
 @ObjectType()
 @EntityModel()
 export default class Profile {
@@ -20,6 +22,7 @@ export default class Profile {
     onDelete: 'SET NULL',
     nullable: true,
   })
+  @TypeormLoader()
   @Field(type => User, { nullable: true })
   user: User;
 

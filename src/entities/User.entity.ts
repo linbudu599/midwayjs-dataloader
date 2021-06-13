@@ -14,7 +14,7 @@ import Profile from './Profile.entity';
 
 import Post from './Post.entity';
 
-import { IntegrationLoader } from '../lib/typegraphql-dataloader';
+import { TypeormLoader } from 'type-graphql-dataloader';
 
 @ObjectType()
 @EntityModel()
@@ -27,16 +27,13 @@ export default class ORMUser extends BaseEntity {
   @Field()
   name: string;
 
+  @Field(type => Profile, { nullable: true })
   @OneToOne(type => Profile, profile => profile.user, {
     cascade: true,
     nullable: true,
   })
   @JoinColumn()
-  @Field(type => Profile, { nullable: true })
-  @IntegrationLoader<Profile, ORMUser>(
-    () => Profile,
-    (user: ORMUser) => user.profile
-  )
+  @TypeormLoader()
   profile?: Profile;
 
   @RelationId((user: ORMUser) => user.profile)

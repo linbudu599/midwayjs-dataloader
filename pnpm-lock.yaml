@@ -24,6 +24,7 @@ specifiers:
   sqlite3: ^5.0.2
   ts-jest: ^26.2.0
   type-graphql: ^1.1.1
+  type-graphql-dataloader: ^0.4.0
   typeorm: ^0.2.32
   typescript: ^4.0.0
 
@@ -40,6 +41,7 @@ dependencies:
   koa-bodyparser: 4.3.0
   sqlite3: 5.0.2
   type-graphql: 1.1.1_2fd34121b17a15d834df56725e6aadf0
+  type-graphql-dataloader: 0.4.0
   typeorm: 0.2.32
 
 devDependencies:
@@ -5592,7 +5594,6 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /logform/2.2.0:
     resolution: {integrity: sha512-N0qPlqfypFx7UHNn4B3lzS/b0uLqt2hmuoa+PpuXNYgozdJYAyauF5Ky0BWVjrxDlMWiT3qN4zPq3vVAfZy7Yg==}
@@ -7797,6 +7798,16 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /type-graphql-dataloader/0.4.0:
+    resolution: {integrity: sha512-C45+lca1cofjCrhenRQCb4mQrEyItdanfQZX3Z9eCOM3r4rDqJZdW0xYNScq6PXGgDWb3lwc7UEm6kzecDo5uA==}
+    dependencies:
+      dataloader: 2.0.0
+      lodash: 4.17.21
+      reflect-metadata: 0.1.13
+      typedi: 0.8.0
+      uuid: 8.3.2
+    dev: false
+
   /type-graphql/1.1.1_2fd34121b17a15d834df56725e6aadf0:
     resolution: {integrity: sha512-iOOWVn0ehCYMukmnXStbkRwFE9dcjt7/oDcBS1JyQZo9CbhlIll4lHHps54HMEk4A4c8bUPd+DjK8w1/ZrxB4A==}
     engines: {node: '>= 10.3'}
@@ -7833,6 +7844,10 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
     dev: true
+
+  /typedi/0.8.0:
+    resolution: {integrity: sha512-/c7Bxnm6eh5kXx2I+mTuO+2OvoWni5+rXA3PhXwVWCtJRYmz3hMok5s1AKLzoDvNAZqj/Q/acGstN0ri5aQoOA==}
+    dev: false
 
   /typeorm/0.2.32:
     resolution: {integrity: sha512-LOBZKZ9As3f8KRMPCUT2H0JZbZfWfkcUnO3w/1BFAbL/X9+cADTF6bczDGGaKVENJ3P8SaKheKmBgpt5h1x+EQ==}

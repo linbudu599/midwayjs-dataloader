@@ -10,7 +10,8 @@ import { mockService } from '../utils/mock';
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class DataLoaderMetadataMiddleware
-  implements MiddlewareInterface<SampleContext> {
+  implements MiddlewareInterface<SampleContext>
+{
   @Inject()
   service: TypeORMService;
 
@@ -26,7 +27,6 @@ export class DataLoaderMetadataMiddleware
       // 所有实体的名称
       // ORMUser Profile Post
       const target = entityMetadata.targetName;
-      // console.log('target: ', target);
       if (!target) return;
 
       if (!loaders[target]) {
@@ -35,7 +35,6 @@ export class DataLoaderMetadataMiddleware
 
       entityMetadata.relations.forEach(relation => {
         // 实体中存在的级联关系
-        // console.log('relation: ', relation.propertyName);
         if (!loaders[target][relation.propertyName]) {
           // loader.Entity.RelationColumn
           loaders[target][relation.propertyName] = new DataLoader(
@@ -63,7 +62,6 @@ export class DataLoaderMetadataMiddleware
       });
     });
 
-    // console.log('loaders: ', loaders);
     return next();
   }
 }

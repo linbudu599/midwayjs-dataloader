@@ -11,7 +11,8 @@ import { mockService } from '../utils/mock';
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class DataLoaderMiddleware
-  implements MiddlewareInterface<SampleContext> {
+  implements MiddlewareInterface<SampleContext>
+{
   @Inject()
   service: TypeORMService;
 

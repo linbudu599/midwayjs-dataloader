@@ -5,11 +5,12 @@ import { Middleware } from 'koa';
 import { ApolloServer } from 'apollo-server-koa';
 import { buildSchemaSync } from 'type-graphql';
 import { getConnection } from 'typeorm';
+import { ApolloServerLoaderPlugin } from 'type-graphql-dataloader';
 
 import { mockService } from '../utils/mock';
 
-import { DataLoaderMiddleware } from '../lib/batchload-manually';
-import { DataLoaderMetadataMiddleware } from '../lib/auto-register-metadata';
+import { DataLoaderMiddleware } from '../lib/register-batchloader-manually';
+import { DataLoaderMetadataMiddleware } from '../lib/auto-register-relation-metadata';
 
 import { ApolloContext } from '../types';
 
@@ -39,6 +40,11 @@ export class GraphqlMiddleware implements IWebMiddleware {
         container: this.app.getApplicationContext(),
         connection: getConnection(),
       } as ApolloContext,
+      plugins: [
+        ApolloServerLoaderPlugin({
+          typeormGetConnection: getConnection, // for use with TypeORM
+        }),
+      ],
     });
     console.log('Apollo-GraphQL Invoke');
 
