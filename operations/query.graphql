@@ -1,0 +1,22 @@
+query SampleQuery {
+  GetAllUsers {
+    partnerOrigin {
+      id
+    }
+    partnerFromCtxLoader {
+      id
+    }
+    partnerFromRegisteredLoader {
+      id
+    }
+    petsOrigin {
+      id
+    }
+    petsFromCtxLoader {
+      id
+    }
+    petsFromRegisteredLoader {
+      id
+    }
+  }
+}

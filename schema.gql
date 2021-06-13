@@ -10,12 +10,13 @@ type ORMUser {
   postsFromContextLoader: [Post!]
   postsFromDecoratorLoader: [Post!]
   postsFromMetadataLoader: [Post!]
-  postsIds: Int!
+  postsIds: Int
   postsOrigin: [Post!]
   profile: Profile
   profileFromContextLoader: Profile
   profileFromDecoratorLoader: Profile
   profileFromMetadataLoader: Profile
+  profileId: Int
   profileOrigin: Profile
 }
 

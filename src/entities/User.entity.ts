@@ -37,6 +37,7 @@ export default class ORMUser extends BaseEntity {
   profile?: Profile;
 
   @RelationId((user: ORMUser) => user.profile)
+  @Field(() => Int, { nullable: true })
   profileId?: number;
 
   @OneToMany(type => Post, post => post.author, {
@@ -47,6 +48,6 @@ export default class ORMUser extends BaseEntity {
   posts?: Post[];
 
   @RelationId((user: ORMUser) => user.posts)
-  @Field(() => Int)
+  @Field(() => [Int], { nullable: true })
   postsIds?: number[];
 }
